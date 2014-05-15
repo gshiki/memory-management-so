@@ -1,0 +1,139 @@
+@CHARSET "ISO-8859-1";
+
+body {
+	background-color: #CCCBCB;
+	margin: 0;
+	/*overflow: hidden;*/
+	font-family: Calibri;
+	font-size: 14px;
+}
+
+#footer {
+	position: fixed;
+	bottom: 0;
+	height: 5%;
+	background-color: #403F3F;
+	text-align: center;
+	border: 1px solid #7F7F7F; 
+	width: 100%;
+}
+
+#name {
+	color: #E5E4E4;
+	font-family: Calibri;
+	margin-top: 8px;
+}
+
+.container {
+	border: 1px solid #7F7F7F;
+	border-radius: 3px;
+	margin: 10px;
+	padding: 8px 5px 0px 5px;
+	height: 150px;
+	overflow: auto;
+}
+
+.botoes{
+	height: auto;
+}
+
+.holder {
+	float: left;
+	margin: 3px;
+}
+
+.text {
+	font-family: Calibri;
+	font-size: 14px;
+}
+
+.select {
+	font-family: Calibri;
+	font-size: 14px;
+	width: 135px;
+}
+
+.busy {
+	float: left;
+	color: #FFF;
+	background: #9BB1FF;
+	margin: 10px;
+	padding: 6px;
+	width: 180px;
+	height: 90px;
+	border: 1px solid #000;
+	border-radius: 10px;
+	box-shadow: 1px 1px 6px black;
+}
+
+.free {
+	float: left;
+	color: #000;
+	background: #FFF;
+	margin: 10px;
+	padding: 6px;
+	width: 180px;
+	height: 90px;
+	border: 1px solid #000;
+	border-radius: 10px;
+	box-shadow: 1px 1px 6px black;
+}
+
+.completed{
+	float: left;
+	color: #000;
+	background-color: #9CCC67;
+	margin: 10px;
+	padding: 6px;
+	width: 150px;
+	height: 80px;
+	border: 1px solid #000;
+	border-radius: 10px;
+	box-shadow: 1px 1px 6px black;
+}
+
+.aborted{
+	float: left;
+	color: #000;
+	background-color: #FFC5B4;
+	margin: 10px;
+	padding: 6px;
+	width: 150px;
+	height: 80px;
+	border: 1px solid #000;
+	border-radius: 10px;
+	box-shadow: 1px 1px 6px black;
+}
+
+.process-info {
+	float: left;
+	color: #000;
+	background: #DBDF64;
+	margin: 10px;
+	padding: 6px;
+	width: 150px;
+	height: 80px;
+	border: 1px solid #000;
+	border-radius: 10px;
+	box-shadow: 1px 1px 6px black;
+}
+
+.button {
+	font-family: Calibri;
+	font-size: 14px;
+	float: left;
+	margin-right: 20px;
+	text-align: center;
+	padding: 1.5% 0 0 5%;
+}
+
+hr {
+	clear: both;
+	color: transparent;
+	border-color: transparent;
+	background-color: transparent;
+}
+
+form {
+	margin-bottom: 50px;
+}
