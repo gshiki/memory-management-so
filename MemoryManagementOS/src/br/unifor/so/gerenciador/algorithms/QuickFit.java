@@ -1,5 +1,6 @@
 package br.unifor.so.gerenciador.algorithms;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.unifor.so.gerenciador.Memory;
@@ -10,6 +11,7 @@ import br.unifor.so.gerenciador.Status;
 public class QuickFit {
 	private List<Process> processList;
 	private List<Process> abortedList;
+	private List<List<MemoryBlock>> mainList;
 	private Memory memory;
 	
 	/** CONSTRUCTOR **/
@@ -34,20 +36,20 @@ public class QuickFit {
 	
 	// Insere um processo da lista de processos de acordo com o tamanho do bloco de memória livre
 	public void allocate(){
-		MemoryBlock pointer = memory.getHeaderFree();
 		boolean isAllocated = false;
 		// Se a lista de processos estiver com conteúdo...
 		if (!processList.isEmpty()) {
 			// ...pego o primeiro processo da lista.
 			Process process = processList.remove(0);
 			// Enquanto o próximo bloco não for nulo...
-			isAllocated = insertProcess(pointer, process);
+			isAllocated = insertProcess(process);
 			// Se o processo não for alocado...
 			if (!isAllocated) {
 				// ... verifica se há espaço na memória para a criação de um bloco com o tamanho correspondente ao processo.
 				if (memory.canCreateBlock(process.getBytes())) {
 					memory.insertFreeBlock(process.getBytes());
-					isAllocated = insertProcess(memory.getHeaderFree(), process);
+					insertMemoryBlockInList();
+					isAllocated = insertProcess(process);
 				// Senão, o processo é abortado.
 				}else{
 					abort(process);
@@ -56,24 +58,83 @@ public class QuickFit {
 		}
 	}
 	
-	public boolean insertProcess(MemoryBlock pointer, Process process){
-		while(pointer.getNextBlock() != null){
-			// ...verifica se o processo encaixa no bloco de memória.
-			if (doesProcessFitMemoryBlock(process, pointer.getNextBlock())) {
-				// Se encaixar, aloca o processo no bloco de memória.
-				process.setStatus(Status.IN_USE);
-				pointer.getNextBlock().setProcess(process);
-				pointer.getNextBlock().setUsedSpace(process.getBytes());
-				memory.transferFreeToBusy(pointer.getNextBlock().getId());
-				System.out.println("ALOCOU PROCESSO " + process.getId());
-				return true;
-			// Senão, verifica no próximo bloco de memória.
-			}else{
-				pointer = pointer.getNextBlock();
-			}
+	public boolean insertProcess(Process process){
+		
+		switch (process.getBytes()) {
+			case 32:
+				if (!mainList.get(0).isEmpty()) {
+					MemoryBlock chosen = mainList.get(0).remove(0);
+					
+					process.setStatus(Status.IN_USE);
+					chosen.setProcess(process);
+					chosen.setUsedSpace(process.getBytes());
+					memory.transferFreeToBusy(chosen.getId());
+					System.out.println("ALOCOU PROCESSO " + process.getId());
+					return true;
+				}
+			case 64:
+				if (!mainList.get(1).isEmpty()) {
+					MemoryBlock chosen = mainList.get(1).remove(0);
+					
+					process.setStatus(Status.IN_USE);
+					chosen.setProcess(process);
+					chosen.setUsedSpace(process.getBytes());
+					memory.transferFreeToBusy(chosen.getId());
+					System.out.println("ALOCOU PROCESSO " + process.getId());
+					return true;
+				}
+			case 128:
+				if (!mainList.get(2).isEmpty()) {
+					MemoryBlock chosen = mainList.get(2).remove(0);
+					
+					process.setStatus(Status.IN_USE);
+					chosen.setProcess(process);
+					chosen.setUsedSpace(process.getBytes());
+					memory.transferFreeToBusy(chosen.getId());
+					System.out.println("ALOCOU PROCESSO " + process.getId());	
+					return true;
+				}
+			case 256:
+				if (!mainList.get(3).isEmpty()) {
+					MemoryBlock chosen = mainList.get(3).remove(0);
+					
+					process.setStatus(Status.IN_USE);
+					chosen.setProcess(process);
+					chosen.setUsedSpace(process.getBytes());
+					memory.transferFreeToBusy(chosen.getId());
+					System.out.println("ALOCOU PROCESSO " + process.getId());
+					return true;
+				}
+			case 512:
+				if (!mainList.get(4).isEmpty()) {
+					MemoryBlock chosen = mainList.get(4).remove(0);
+					
+					process.setStatus(Status.IN_USE);
+					chosen.setProcess(process);
+					chosen.setUsedSpace(process.getBytes());
+					memory.transferFreeToBusy(chosen.getId());
+					System.out.println("ALOCOU PROCESSO " + process.getId());
+					return true;
+				}
+			case 1024:
+				if (!mainList.get(5).isEmpty()) {
+					MemoryBlock chosen = mainList.get(5).remove(0);
+					
+					process.setStatus(Status.IN_USE);
+					chosen.setProcess(process);
+					chosen.setUsedSpace(process.getBytes());
+					memory.transferFreeToBusy(chosen.getId());
+					System.out.println("ALOCOU PROCESSO " + process.getId());
+					return true;
+				}
+			default:
+				break;
 		}
+		
 		return false;
+	
 	}
+	
 	
 	public boolean doesProcessFitMemoryBlock(Process process, MemoryBlock block){
 		if (process.getBytes() <= block.getTotalSize()) {
@@ -82,6 +143,7 @@ public class QuickFit {
 		return false;
 	}
 	
+	
 	public void abort(Process process){
 		process.setStatus(Status.ABORTED);
 		abortedList.add(process);
@@ -89,7 +151,7 @@ public class QuickFit {
 	}
 	
 	public void createQuickLists(){
-		List<List<MemoryBlock>> mainList = new ArrayList<List<MemoryBlock>>();
+		mainList = new ArrayList<List<MemoryBlock>>();
 		List<MemoryBlock> thirtyTwo = new ArrayList<MemoryBlock>();
 		List<MemoryBlock> sixtyFour = new ArrayList<MemoryBlock>();
 		List<MemoryBlock> oneHundredTwentyEight = new ArrayList<MemoryBlock>();
@@ -105,17 +167,66 @@ public class QuickFit {
 		mainList.add(oneThousandTwentyFour);
 	}
 	
-	public void insertMemoryBlockInList(MemoryBlock header){
+	public void insertMemoryBlockInList(){
+		MemoryBlock header = memory.getHeaderFree();
 		
+		while (header.getNextBlock() != null) {
+
+			switch (header.getNextBlock().getTotalSize()) {
+			case 32:
+				header.getNextBlock().setList(32);
+				mainList.get(0).add(header.getNextBlock());
+				break;
+			case 64:
+				header.getNextBlock().setList(64);
+				mainList.get(1).add(header.getNextBlock());
+				break;
+			case 128:
+				header.getNextBlock().setList(128);
+				mainList.get(2).add(header.getNextBlock());
+				break;
+			case 256:
+				header.getNextBlock().setList(256);
+				mainList.get(3).add(header.getNextBlock());
+				break;
+			case 512:
+				header.getNextBlock().setList(512);
+				mainList.get(4).add(header.getNextBlock());
+				break;
+			case 1024:
+				header.getNextBlock().setList(1024);
+				mainList.get(5).add(header.getNextBlock());
+				break;
+			default:
+				break;
+			}
+				
+		}
 	}
 	
-	public void removeMemoryBlockFromList(){
-		
+	public void removeMemoryBlockFromList(MemoryBlock block){
+		switch (block.getList()) {
+		case 32:
+			mainList.get(0).remove(block);
+			break;
+		case 64:
+			mainList.get(1).remove(block);
+			break;
+		case 128:
+			mainList.get(2).remove(block);
+			break;
+		case 256:
+			mainList.get(3).remove(block);
+			break;
+		case 512:
+			mainList.get(4).remove(block);
+			break;
+		case 1024:
+			mainList.get(5).remove(block);
+			break;
+		default:
+			break;
+		}
 	}
-	
-	public void addProcessInMemoryBlock(){
-		
-	}
-	
 	
 }
