@@ -10,7 +10,6 @@
 		
 		<script type="text/javascript">
 		var TIME_EXECUTE_INTERVAL = 1 * 1000;
-		var TIMEOUT_EXECUTE;
 		
 		<c:if test="${ready}">
 			TIMEOUT_EXECUTE = window.setTimeout( 'execute()' , TIME_EXECUTE_INTERVAL );
@@ -112,10 +111,10 @@
 				<div class="holder">
 					<div class="text">Tamanho da memória:</div>
 					<div class="input">
-						<c:if test="${not ready and not running}">
+						<c:if test="${not ready}">
 							<input type="text" name="memorySize" value="0">
 						</c:if>
-						<c:if test="${ready or running}">
+						<c:if test="${ready}">
 							<input disabled="disabled" type="text" name="memorySize">
 						</c:if>
 					</div>
@@ -124,10 +123,10 @@
 				<div class="holder">
 					<div class="text">Processos:</div>
 					<div class="input">
-						<c:if test="${not ready and not running}">
+						<c:if test="${not ready}">
 							<input type="text" name="processNo" value="0">
 						</c:if>
-						<c:if test="${ready or running}">
+						<c:if test="${ready}">
 							<input disabled="disabled" type="text" name="processNo">
 						</c:if>
 					</div>
@@ -136,7 +135,7 @@
 				<div class="holder">
 					<div class="text">Algoritmo de alocação:</div>
 					<div class="input">
-						<c:if test="${not ready and not running}">
+						<c:if test="${not ready}">
 							<select class="select" name="algorithm">
 								<option value="1"> First Fit
 								<option value="2"> Best Fit
@@ -147,7 +146,7 @@
 							</select>
 						</c:if>
 						
-						<c:if test="${ready or running}">
+						<c:if test="${ready}">
 							<select disabled="disabled" class="select" name="algorithm">
 								<option value="1"> First Fit
 								<option value="2"> Best Fit
@@ -161,16 +160,21 @@
 				</div>
 				
 				<div class="button">
-					<c:if test="${not ready and not running}">
+					<c:if test="${not ready}">
 						<button type="submit" name="action" value="start">Iniciar</button>
 					</c:if>
-					<c:if test="${ready or running}">
+					<c:if test="${ready}">
 						<button disabled="disabled" type="submit" name="action" value="start">Iniciar</button>
 						
-						<button onclick="pause(this);">Pausar</button>
+						<button onclick="pause(this); return false;">Pausar</button>
 					</c:if>
 					
 					<button type="button" onclick="addProcess();">Adicionar Processo</button>
+				</div>
+				
+				<div class="container-tempo-sistema">
+					<div class="text">Tempo do Sistema:</div>
+					<div id="tempoSistemaContainer"></div>
 				</div>
 				
 				<hr>

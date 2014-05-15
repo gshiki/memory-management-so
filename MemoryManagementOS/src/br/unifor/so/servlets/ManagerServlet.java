@@ -1,6 +1,8 @@
 package br.unifor.so.servlets;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -21,6 +23,7 @@ import br.unifor.so.gerenciador.Status;
 public class ManagerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private Date systemCycle;
 	private Manager manager;
 	private Memory memory;
 	private GarbageCollector garbage;
@@ -34,7 +37,7 @@ public class ManagerServlet extends HttpServlet {
 		
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		
-		if (act.equals("start")) {
+		if (act != null && act.equals("start")) {
 			int totalMemory = Integer.parseInt(request.getParameter("memorySize"));
 			int processNo = Integer.parseInt(request.getParameter("processNo"));
 			int algorithm = Integer.parseInt(request.getParameter("algorithm"));
@@ -49,15 +52,17 @@ public class ManagerServlet extends HttpServlet {
 			
 			List<Process> processList = manager.getProcessList();
 			
+			systemCycle = new Date();
+			
 			request.setAttribute("processList", processList);
 			request.setAttribute("ready", true);
 			
 			rd.forward(request , response);
-		} else if (act.equals("add-process")) {
+		} else if (act != null && act.equals("add-process")) {
 			if (manager != null) {
 				manager.addProcess();
 			}
-		} else if (act.equals("execute")) {
+		} else if (act != null && act.equals("execute")) {
 			if (manager != null) {
 				manager.execute();
 				
@@ -66,18 +71,33 @@ public class ManagerServlet extends HttpServlet {
 				List<Process> completedList = garbage.getCompletedList();
 				List<Process> abortedList = manager.getAbortedList();
 				
-				request.setAttribute("runing", true);
-				
 				response.setContentType("text/plain");
 				response.setCharacterEncoding("UTF-8");
 				
+				response.getWriter().append(rollCycle());
 				response.getWriter().append(buildContainerMemoryBlocks(blocks, manager.getAlgorithm()));
 				response.getWriter().append(buildContainerProcess(processList));
-	            response.getWriter().append(buildContainerCompletedProcesses(completedList));
-	            response.getWriter().append(buildContainerAbortedProcesses(abortedList));
-	            response.getWriter().flush();
+				response.getWriter().append(buildContainerCompletedProcesses(completedList));
+				response.getWriter().append(buildContainerAbortedProcesses(abortedList));
+				response.getWriter().flush();
 			}
 		}
+	}
+	
+	public String rollCycle() {
+		String html = "";
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		calendar.setTime(systemCycle);
+		calendar.roll(Calendar.SECOND, 1);
+		
+		systemCycle = calendar.getTime();
+		
+		html += "tempoSistemaContainer=";
+		html += "<div>" + systemCycle.getTime() + "</div>";
+		
+		return html;
 	}
 	
 	public String buildContainerMemoryBlocks(List<MemoryBlock> blocks, int algorithm) {
