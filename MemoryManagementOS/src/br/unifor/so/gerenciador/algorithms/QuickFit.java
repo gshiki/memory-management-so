@@ -1,6 +1,5 @@
 package br.unifor.so.gerenciador.algorithms;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import br.unifor.so.gerenciador.Memory;
