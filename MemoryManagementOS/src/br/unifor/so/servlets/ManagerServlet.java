@@ -61,8 +61,6 @@ public class ManagerServlet extends HttpServlet {
 			if (manager != null) {
 				manager.execute();
 				
-				int algorithm = Integer.parseInt(request.getParameter("algorithm"));
-				
 				List<MemoryBlock> blocks = manager.organizeBlocksById(manager.getBlocks());
 				List<Process> processList = manager.getProcessList();
 				List<Process> completedList = garbage.getCompletedList();
@@ -73,7 +71,7 @@ public class ManagerServlet extends HttpServlet {
 				response.setContentType("text/plain");
 				response.setCharacterEncoding("UTF-8");
 				
-				response.getWriter().append(buildContainerMemoryBlocks(blocks, algorithm));
+				response.getWriter().append(buildContainerMemoryBlocks(blocks, manager.getAlgorithm()));
 				response.getWriter().append(buildContainerProcess(processList));
 	            response.getWriter().append(buildContainerCompletedProcesses(completedList));
 	            response.getWriter().append(buildContainerAbortedProcesses(abortedList));
