@@ -9,13 +9,26 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		
 		<script type="text/javascript">
+		var TIME_EXECUTE_INTERVAL = 1 * 1000;
+		var TIMEOUT_EXECUTE;
+		
 		<c:if test="${ready}">
-			window.setTimeout( 'execute()' , 1000 );
+			TIMEOUT_EXECUTE = window.setTimeout( 'execute()' , TIME_EXECUTE_INTERVAL );
 		</c:if>
 		
-		<c:if test="${readyStep}">
-			window.setTimeout( 'executeOneStep()' , 1000 );
-		</c:if>
+		function pause(botao) {
+			if (TIMEOUT_EXECUTE) {
+				botao.innerHTML = "Continuar";
+				
+				clearTimeout(TIMEOUT_EXECUTE);
+				
+				TIMEOUT_EXECUTE = null;
+			} else {
+				botao.innerHTML = "Pausar";
+				
+				TIMEOUT_EXECUTE = window.setTimeout( 'execute()' , 10 );
+			}
+		}
 		
 		function execute() {
 			var xmlhttp;
@@ -30,22 +43,6 @@
 			    }
 			};
 			xmlhttp.open("GET", "ManagerServlet?action=execute", true);
-			xmlhttp.send();
-		}
-		
-		function executeOneStep() {
-			var xmlhttp;
-			if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
-				xmlhttp=new XMLHttpRequest();
-			}else{// code for IE6, IE5
-			  	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			xmlhttp.onreadystatechange=function(){
-			  	if (xmlhttp.readyState==4 && xmlhttp.status==200){
-					updateContainers(xmlhttp.responseText, false);			    	
-			    }
-			};
-			xmlhttp.open("GET", "ManagerServlet?action=executeStep", true);
 			xmlhttp.send();
 		}
 		
@@ -100,7 +97,7 @@
 	    	}
 	    	
 	    	if (infinity) {
-		    	window.setTimeout( 'execute()' , 2000 );
+		    	TIMEOUT_EXECUTE = window.setTimeout( 'execute()' , TIME_EXECUTE_INTERVAL );
 	    	}
 		}
 		
@@ -115,10 +112,10 @@
 				<div class="holder">
 					<div class="text">Tamanho da memória:</div>
 					<div class="input">
-						<c:if test="${not ready and not running and not readyStep}">
+						<c:if test="${not ready and not running}">
 							<input type="text" name="memorySize" value="0">
 						</c:if>
-						<c:if test="${ready or running or readyStep}">
+						<c:if test="${ready or running}">
 							<input disabled="disabled" type="text" name="memorySize">
 						</c:if>
 					</div>
@@ -127,10 +124,10 @@
 				<div class="holder">
 					<div class="text">Processos:</div>
 					<div class="input">
-						<c:if test="${not ready and not running and not readyStep}">
+						<c:if test="${not ready and not running}">
 							<input type="text" name="processNo" value="0">
 						</c:if>
-						<c:if test="${ready or running or readyStep}">
+						<c:if test="${ready or running}">
 							<input disabled="disabled" type="text" name="processNo">
 						</c:if>
 					</div>
@@ -139,7 +136,7 @@
 				<div class="holder">
 					<div class="text">Algoritmo de alocação:</div>
 					<div class="input">
-						<c:if test="${not ready and not running and not readyStep}">
+						<c:if test="${not ready and not running}">
 							<select class="select" name="algorithm">
 								<option value="1"> First Fit
 								<option value="2"> Best Fit
@@ -150,7 +147,7 @@
 							</select>
 						</c:if>
 						
-						<c:if test="${ready or running or readyStep}">
+						<c:if test="${ready or running}">
 							<select disabled="disabled" class="select" name="algorithm">
 								<option value="1"> First Fit
 								<option value="2"> Best Fit
@@ -169,6 +166,8 @@
 					</c:if>
 					<c:if test="${ready or running}">
 						<button disabled="disabled" type="submit" name="action" value="start">Iniciar</button>
+						
+						<button onclick="pause(this);">Pausar</button>
 					</c:if>
 					
 					<button type="button" onclick="addProcess();">Adicionar Processo</button>
@@ -177,13 +176,11 @@
 				<hr>
 			</div>
 			
-			<div class="container" id="memoryBlockContainer">
-<!-- 				<p>Blocos de Memória : </p> -->
-			</div>
-			
+			<p>Blocos de Memória : </p>
+			<div class="container" id="memoryBlockContainer"></div>
+
+			<p>Processos Aptos : </p>			
 			<div class="container" id="processContainer">
-<!-- 				<p>Processos Aptos : </p> -->
-				
 				<c:forEach items="${processList}" var="process">
 					<div class="ready">
 						<div class="process-info">
@@ -195,14 +192,12 @@
 				</c:forEach>	
 				<hr>
 			</div>
-		
-			<div class="container" id="completedContainer">
-<!-- 				<p>Processos Completos : </p> -->
-			</div>
+
+			<p>Processos Completos : </p>
+			<div class="container" id="completedContainer"></div>
 			
-			<div class="container" id="abortedContainer">
-<!-- 				<p>Processos Abortados : </p> -->
-			</div>
+			<p>Processos Abortados : </p>
+			<div class="container" id="abortedContainer"></div>
 		</form>
 			
 		<div id="footer"> 

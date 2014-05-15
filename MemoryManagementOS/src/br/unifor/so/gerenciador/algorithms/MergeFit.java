@@ -47,7 +47,7 @@ public class MergeFit {
 			// ...pego o primeiro processo da lista.
 			Process process = processList.remove(0);
 			// Enquanto o próximo bloco não for nulo...
-			isAllocated = verifyAllocation(pointer, process);
+			isAllocated = insertProcess(pointer, process);
 			// Se o processo não for alocado...
 			if (!isAllocated) {
 				abort(process);
@@ -55,7 +55,7 @@ public class MergeFit {
 		}
 	}
 	
-	public boolean verifyAllocation(MemoryBlock pointer, Process process){
+	public boolean insertProcess(MemoryBlock pointer, Process process){
 		while(pointer.getNextBlock() != null){
 			// ...verifica se o processo encaixa no bloco de memória.
 			if (doesProcessFitMemoryBlock(process, pointer.getNextBlock())) {

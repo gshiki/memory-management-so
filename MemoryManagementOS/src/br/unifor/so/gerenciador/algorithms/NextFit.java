@@ -43,13 +43,13 @@ public class NextFit {
 			// ...pego o primeiro processo da lista.
 			Process process = processList.remove(0);
 			// Enquanto o próximo bloco não for nulo...
-			isAllocated = verifyAllocation(pointer, process);
+			isAllocated = insertProcess(pointer, process);
 			// Se o processo não for alocado...
 			if (!isAllocated) {
 				// ... verifica se há espaço na memória para a criação de um bloco com o tamanho correspondente ao processo.
 				if (memory.canCreateBlock(process.getBytes())) {
 					memory.insertFreeBlock(process.getBytes());
-					isAllocated = verifyAllocation(pointer, process);
+					isAllocated = insertProcess(pointer, process);
 				// Senão, o processo é abortado.
 				}else{
 					abort(process);
@@ -58,7 +58,7 @@ public class NextFit {
 		}
 	}
 	
-	public boolean verifyAllocation(MemoryBlock point, Process process){
+	public boolean insertProcess(MemoryBlock point, Process process){
 		MemoryBlock aux = point;
 		while(aux.getNextBlock() != null){
 			// ...verifica se o processo encaixa no bloco de memória.

@@ -1,5 +1,6 @@
 package br.unifor.so.gerenciador.algorithms;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.unifor.so.gerenciador.Memory;
@@ -13,11 +14,12 @@ public class QuickFit {
 	private Memory memory;
 	
 	/** CONSTRUCTOR **/
-	ERRO
+	
 	public QuickFit(List<Process> processList, List<Process> abortedList, Memory memory) {
 		this.processList = processList;
 		this.abortedList = abortedList;
 		this.memory = memory;
+		createQuickLists();
 	}
 	
 	/** GETTERS & SETTERS **/
@@ -41,13 +43,13 @@ public class QuickFit {
 			// ...pego o primeiro processo da lista.
 			Process process = processList.remove(0);
 			// Enquanto o próximo bloco não for nulo...
-			isAllocated = verifyAllocation(pointer, process);
+			isAllocated = insertProcess(pointer, process);
 			// Se o processo não for alocado...
 			if (!isAllocated) {
 				// ... verifica se há espaço na memória para a criação de um bloco com o tamanho correspondente ao processo.
 				if (memory.canCreateBlock(process.getBytes())) {
 					memory.insertFreeBlock(process.getBytes());
-					isAllocated = verifyAllocation(memory.getHeaderFree(), process);
+					isAllocated = insertProcess(memory.getHeaderFree(), process);
 				// Senão, o processo é abortado.
 				}else{
 					abort(process);
@@ -56,7 +58,7 @@ public class QuickFit {
 		}
 	}
 	
-	public boolean verifyAllocation(MemoryBlock pointer, Process process){
+	public boolean insertProcess(MemoryBlock pointer, Process process){
 		while(pointer.getNextBlock() != null){
 			// ...verifica se o processo encaixa no bloco de memória.
 			if (doesProcessFitMemoryBlock(process, pointer.getNextBlock())) {
@@ -89,6 +91,33 @@ public class QuickFit {
 	}
 	
 	public void createQuickLists(){
+		List<List<MemoryBlock>> mainList = new ArrayList<List<MemoryBlock>>();
+		List<MemoryBlock> thirtyTwo = new ArrayList<MemoryBlock>();
+		List<MemoryBlock> sixtyFour = new ArrayList<MemoryBlock>();
+		List<MemoryBlock> oneHundredTwentyEight = new ArrayList<MemoryBlock>();
+		List<MemoryBlock> twoHundredFiftySix = new ArrayList<MemoryBlock>();
+		List<MemoryBlock> fiveHundrerTwelve = new ArrayList<MemoryBlock>();
+		List<MemoryBlock> oneThousandTwentyFour = new ArrayList<MemoryBlock>();
+		
+		mainList.add(thirtyTwo);
+		mainList.add(sixtyFour);
+		mainList.add(oneHundredTwentyEight);
+		mainList.add(twoHundredFiftySix);
+		mainList.add(fiveHundrerTwelve);
+		mainList.add(oneThousandTwentyFour);
 	}
+	
+	public void insertMemoryBlockInList(MemoryBlock header){
+		
+	}
+	
+	public void removeMemoryBlockFromList(){
+		
+	}
+	
+	public void addProcessInMemoryBlock(){
+		
+	}
+	
 	
 }

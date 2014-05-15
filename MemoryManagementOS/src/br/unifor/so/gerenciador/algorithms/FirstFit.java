@@ -41,13 +41,13 @@ public class FirstFit {
 			// ...pego o primeiro processo da lista.
 			Process process = processList.remove(0);
 			// Enquanto o próximo bloco não for nulo...
-			isAllocated = verifyAllocation(pointer, process);
+			isAllocated = insertProcess(pointer, process);
 			// Se o processo não for alocado...
 			if (!isAllocated) {
 				// ... verifica se há espaço na memória para a criação de um bloco com o tamanho correspondente ao processo.
 				if (memory.canCreateBlock(process.getBytes())) {
 					memory.insertFreeBlock(process.getBytes());
-					isAllocated = verifyAllocation(memory.getHeaderFree(), process);
+					isAllocated = insertProcess(memory.getHeaderFree(), process);
 				// Senão, o processo é abortado.
 				}else{
 					abort(process);
@@ -56,7 +56,7 @@ public class FirstFit {
 		}
 	}
 	
-	public boolean verifyAllocation(MemoryBlock pointer, Process process){
+	public boolean insertProcess(MemoryBlock pointer, Process process){
 		while(pointer.getNextBlock() != null){
 			// ...verifica se o processo encaixa no bloco de memória.
 			if (doesProcessFitMemoryBlock(process, pointer.getNextBlock())) {
