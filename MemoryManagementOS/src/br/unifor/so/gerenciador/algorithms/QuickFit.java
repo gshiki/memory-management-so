@@ -1,6 +1,5 @@
 package br.unifor.so.gerenciador.algorithms;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import br.unifor.so.gerenciador.Memory;
@@ -14,7 +13,6 @@ public class QuickFit {
 	private Memory memory;
 	
 	/** CONSTRUCTOR **/
-	
 	public QuickFit(List<Process> processList, List<Process> abortedList, Memory memory) {
 		this.processList = processList;
 		this.abortedList = abortedList;
