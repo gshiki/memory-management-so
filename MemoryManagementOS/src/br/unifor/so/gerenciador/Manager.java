@@ -235,6 +235,7 @@ public class Manager {
 //				System.out.println("++++++++++ INICIO RODADA TEMPO = " + new Date() + " ++++++++++");
 				quickFit.allocate();
 				lowerProcessesTime();
+				quickFit.insertMemoryBlockInList();
 //				System.out.println("++++++++++ FIM RODADA TEMPO = " + new Date() + " ++++++++++");
 //				try {
 //					Thread.sleep(1 * 1000);

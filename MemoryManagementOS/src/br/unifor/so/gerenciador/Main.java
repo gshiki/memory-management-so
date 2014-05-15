@@ -2,7 +2,7 @@ package br.unifor.so.gerenciador;
 
 public class Main {
 	static int MEMORY_SIZE = 512;
-	static int ALGORITHM = 6;
+	static int ALGORITHM = 5;
 	static int PROCESS = 10;
 	
 	
