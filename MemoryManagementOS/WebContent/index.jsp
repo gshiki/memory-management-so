@@ -9,13 +9,26 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		
 		<script type="text/javascript">
+		var TIME_EXECUTE_INTERVAL = 1 * 1000;
+		var TIMEOUT_EXECUTE;
+		
 		<c:if test="${ready}">
-			window.setTimeout( 'execute()' , 1000 );
+			TIMEOUT_EXECUTE = window.setTimeout( 'execute()' , TIME_EXECUTE_INTERVAL );
 		</c:if>
 		
-		<c:if test="${readyStep}">
-			window.setTimeout( 'executeOneStep()' , 1000 );
-		</c:if>
+		function restart() {
+			if (!TIMEOUT_EXECUTE) {
+				TIMEOUT_EXECUTE = window.setTimeout( 'execute()' , 10 );
+			}
+		}
+		
+		function pause() {
+			if (TIMEOUT_EXECUTE) {
+				clearTimeout(TIMEOUT_EXECUTE);
+				
+				TIMEOUT_EXECUTE = null;
+			}
+		}
 		
 		function execute() {
 			var xmlhttp;
@@ -30,22 +43,6 @@
 			    }
 			};
 			xmlhttp.open("GET", "ManagerServlet?action=execute", true);
-			xmlhttp.send();
-		}
-		
-		function executeOneStep() {
-			var xmlhttp;
-			if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
-				xmlhttp=new XMLHttpRequest();
-			}else{// code for IE6, IE5
-			  	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			xmlhttp.onreadystatechange=function(){
-			  	if (xmlhttp.readyState==4 && xmlhttp.status==200){
-					updateContainers(xmlhttp.responseText, false);			    	
-			    }
-			};
-			xmlhttp.open("GET", "ManagerServlet?action=executeStep", true);
 			xmlhttp.send();
 		}
 		
@@ -100,7 +97,7 @@
 	    	}
 	    	
 	    	if (infinity) {
-		    	window.setTimeout( 'execute()' , 2000 );
+		    	TIMEOUT_EXECUTE = window.setTimeout( 'execute()' , TIME_EXECUTE_INTERVAL );
 	    	}
 		}
 		
