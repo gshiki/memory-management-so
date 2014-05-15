@@ -12,8 +12,8 @@ public class QuickFit {
 	private List<Process> abortedList;
 	private Memory memory;
 	
-	/** CONSTRUCTOR **/dgfdgffgfgdfgd
-	
+	/** CONSTRUCTOR **/
+	ERRO
 	public QuickFit(List<Process> processList, List<Process> abortedList, Memory memory) {
 		this.processList = processList;
 		this.abortedList = abortedList;
