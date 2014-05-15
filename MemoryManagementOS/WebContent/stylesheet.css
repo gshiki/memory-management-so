@@ -8,6 +8,13 @@ body {
 	font-size: 14px;
 }
 
+p{
+	margin: 10px;
+	
+	font-size: 120%;
+	font-weight: 900;
+}
+
 #footer {
 	position: fixed;
 	bottom: 0;
