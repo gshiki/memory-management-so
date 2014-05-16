@@ -63,6 +63,34 @@ public class Memory {
 		return null;
 	}
 	
+	// Procura e retorna um bloco de memória livre dado seu ID
+	public MemoryBlock searchFromFreeMemoryBlock(int id, MemoryBlock block){
+		MemoryBlock pointer = searchFreeMemoryBlock(id);
+		
+		while(pointer.getNextBlock() != null){
+			if (pointer.getNextBlock().getId() == id) {
+				return pointer.getNextBlock();
+			}
+			pointer = pointer.getNextBlock();
+		}
+		
+		return null;
+	}
+	
+	// Procura e retorna um bloco de memória ocupado dado seu ID
+	public MemoryBlock searchFromBusyMemoryBlock(int id, MemoryBlock block){
+		MemoryBlock pointer = searchBusyMemoryBlock(id);
+		
+		while(pointer.getNextBlock() != null){
+			if (pointer.getNextBlock().getId() == id) {
+				return pointer.getNextBlock();
+			}
+			pointer = pointer.getNextBlock();
+		}
+		
+		return null;
+	}
+	
 	// Retorna o espaço usado por blocos na lista de Free
 	public int getUsedFreeSpace(){
 		int usedSpace = 0;
