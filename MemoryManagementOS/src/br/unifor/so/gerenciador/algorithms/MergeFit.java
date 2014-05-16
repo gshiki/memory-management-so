@@ -1,5 +1,6 @@
 package br.unifor.so.gerenciador.algorithms;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.unifor.so.gerenciador.Memory;
@@ -60,7 +61,12 @@ public class MergeFit {
 			// ...verifica se o processo encaixa no bloco de memória.
 			if (doesProcessFitMemoryBlock(process, pointer.getNextBlock())) {
 				if (pointer.getNextBlock().getTotalSize() - process.getBytes() > 0) {
-					memory.insertFreeBlock(pointer.getNextBlock().getTotalSize() - process.getBytes());
+					if (pointer.getNextBlock().getNextBlock() != null) {
+						memory.insertFreeBlockAfter(pointer.getNextBlock().getTotalSize() - process.getBytes(), pointer.getNextBlock());
+						organizeBlocksId(pointer.getNextBlock());
+					} else {
+						memory.insertFreeBlock(pointer.getNextBlock().getTotalSize() - process.getBytes());
+					}
 					process.setStatus(Status.IN_USE);
 					pointer.getNextBlock().setProcess(process);
 					pointer.getNextBlock().setTotalSize(process.getBytes());
@@ -92,6 +98,53 @@ public class MergeFit {
 		process.setStatus(Status.ABORTED);
 		abortedList.add(process);
 		System.out.println("ABORTOU O " + process.getId());
+	}
+	
+	public void organizeBlocksId(MemoryBlock block){
+		int blockId = block.getId();
+		List<MemoryBlock> list = getBlocks();
+		MemoryBlock aux = null;
+		MemoryBlock last = null;
+		
+		for (int i = blockId; i < list.size()-2; i++) {
+			if (memory.searchFreeMemoryBlock(i + 1) != null) {
+				aux = memory.searchFreeMemoryBlock(i + 1);
+			} else if (memory.searchBusyMemoryBlock(i + 1) != null){
+				aux = memory.searchBusyMemoryBlock(i + 1);
+			}
+			
+			if (aux == last) {
+				if (memory.searchFromFreeMemoryBlock(i + 1, aux) != null) {
+					aux = memory.searchFromFreeMemoryBlock(i + 1, aux);
+				} else if (memory.searchFromBusyMemoryBlock(i + 1, aux) != null){
+					aux = memory.searchFromBusyMemoryBlock(i + 1, aux);
+				}
+			} 
+			
+			aux.setId(i + 2);
+			last = aux;
+		}
+		
+		block.getNextBlock().setId(blockId + 1);
+	}
+	
+	public List<MemoryBlock> getBlocks() {
+		MemoryBlock busy = memory.getHeaderBusy();
+		MemoryBlock free = memory.getHeaderFree();
+		
+		List<MemoryBlock> blocks = new ArrayList<MemoryBlock>();
+		
+		while (busy.getNextBlock() != null) {
+			blocks.add(busy.getNextBlock());
+			
+			busy = busy.getNextBlock();
+		}
+		while (free.getNextBlock() != null) {
+			blocks.add(free.getNextBlock());
+			
+			free = free.getNextBlock();
+		}
+		return blocks;
 	}
 	
 }

@@ -63,6 +63,34 @@ public class Memory {
 		return null;
 	}
 	
+	// Procura e retorna um bloco de memória livre dado seu ID
+	public MemoryBlock searchFromFreeMemoryBlock(int id, MemoryBlock block){
+		MemoryBlock pointer = searchFreeMemoryBlock(id);
+		
+		while(pointer.getNextBlock() != null){
+			if (pointer.getNextBlock().getId() == id) {
+				return pointer.getNextBlock();
+			}
+			pointer = pointer.getNextBlock();
+		}
+		
+		return null;
+	}
+	
+	// Procura e retorna um bloco de memória ocupado dado seu ID
+	public MemoryBlock searchFromBusyMemoryBlock(int id, MemoryBlock block){
+		MemoryBlock pointer = searchBusyMemoryBlock(id);
+		
+		while(pointer.getNextBlock() != null){
+			if (pointer.getNextBlock().getId() == id) {
+				return pointer.getNextBlock();
+			}
+			pointer = pointer.getNextBlock();
+		}
+		
+		return null;
+	}
+	
 	// Retorna o espaço usado por blocos na lista de Free
 	public int getUsedFreeSpace(){
 		int usedSpace = 0;
@@ -139,7 +167,7 @@ public class Memory {
 		return getFreeSpace() > 0;
 	}
 	
-	// Insere um bloco de memória na lista de livres
+	// Insere um bloco de memória no final da lista de livres
 	public void insertFreeBlock(int totalSize){
 		System.out.println(">>>>>>>>>>>>>> CRIOU UM BLOCO NOVO DE TAMANHO : " + totalSize);
 		MemoryBlock newBlock = new MemoryBlock(totalSize);
@@ -150,6 +178,20 @@ public class Memory {
 			pointer = pointer.getNextBlock();
 		}
 		
+		pointer.setNextBlock(newBlock);
+		newBlock.setPreviousBlock(pointer);
+		
+	}
+	
+	// Insere um bloco de memória na lista de livres
+	public void insertFreeBlockAfter(int totalSize, MemoryBlock aux){
+		System.out.println(">>>>>>>>>>>>>> CRIOU UM BLOCO NOVO DE TAMANHO : " + totalSize);
+		MemoryBlock newBlock = new MemoryBlock(totalSize);
+		MemoryBlock pointer = aux;
+		newBlock.setStatus(Status.FREE);
+		
+		newBlock.setNextBlock(pointer.getNextBlock());
+		pointer.getNextBlock().setPreviousBlock(newBlock);
 		pointer.setNextBlock(newBlock);
 		newBlock.setPreviousBlock(pointer);
 		

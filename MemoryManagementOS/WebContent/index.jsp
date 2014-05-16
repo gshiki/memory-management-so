@@ -92,6 +92,12 @@
 	    			container = container.replace("memoryBlockContainer=", "");
 	    			
 	    			elementContainer.innerHTML = container + "<hr>";
+	    		} else if (container.indexOf("systemTimeContainer") > -1) {
+	    			var elementContainer = document.getElementById("systemTimeContainer");
+	    			
+	    			container = container.replace("systemTimeContainer=", "");
+	    			
+	    			elementContainer.innerHTML = container + "<hr>";
 	    		}
 	    	}
 	    	
@@ -170,6 +176,11 @@
 					</c:if>
 					
 					<button type="button" onclick="addProcess();">Adicionar Processo</button>
+				</div>
+				
+				<div class="holder">
+					<div class="text">Tempo do Sistema:</div>
+					<div id="systemTimeContainer"></div>
 				</div>
 				
 				<hr>

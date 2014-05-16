@@ -166,32 +166,32 @@ public class QuickFit {
 				case 32:
 					header.getNextBlock().setList(32);
 					mainList.get(0).add(header.getNextBlock());
-					organizeBlocksById(mainList.get(0));
+//					organizeBlocksById(mainList.get(0));
 					break;
 				case 64:
 					header.getNextBlock().setList(64);
 					mainList.get(1).add(header.getNextBlock());
-					organizeBlocksById(mainList.get(1));
+//					organizeBlocksById(mainList.get(1));
 					break;
 				case 128:
 					header.getNextBlock().setList(128);
 					mainList.get(2).add(header.getNextBlock());
-					organizeBlocksById(mainList.get(2));
+//					organizeBlocksById(mainList.get(2));
 					break;
 				case 256:
 					header.getNextBlock().setList(256);
 					mainList.get(3).add(header.getNextBlock());
-					organizeBlocksById(mainList.get(3));
+//					organizeBlocksById(mainList.get(3));
 					break;
 				case 512:
 					header.getNextBlock().setList(512);
 					mainList.get(4).add(header.getNextBlock());
-					organizeBlocksById(mainList.get(4));
+//					organizeBlocksById(mainList.get(4));
 					break;
 				case 1024:
 					header.getNextBlock().setList(1024);
 					mainList.get(5).add(header.getNextBlock());
-					organizeBlocksById(mainList.get(5));
+//					organizeBlocksById(mainList.get(5));
 					break;
 				default:
 					break;

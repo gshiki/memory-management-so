@@ -66,7 +66,7 @@ public class ManagerServlet extends HttpServlet {
 			if (manager != null) {
 				manager.execute();
 				
-				List<MemoryBlock> blocks = manager.organizeBlocksById(manager.getBlocks());
+				List<MemoryBlock> blocks = manager.getBlocks();
 				List<Process> processList = manager.getProcessList();
 				List<Process> completedList = garbage.getCompletedList();
 				List<Process> abortedList = manager.getAbortedList();
