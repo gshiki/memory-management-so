@@ -87,6 +87,9 @@ public class Manager {
 		this.abortedList = abortedList;
 	}
 	
+	
+	// METHODS
+	
 	public List<MemoryBlock> getBlocks() {
 		MemoryBlock busy = memory.getHeaderBusy();
 		MemoryBlock free = memory.getHeaderFree();
@@ -121,8 +124,6 @@ public class Manager {
 		
 		return blocks;
 	}
-	
-	// METHODS
 	
 	public List<Process> createProcessList(){
 		List <Process> list = new ArrayList<Process>();

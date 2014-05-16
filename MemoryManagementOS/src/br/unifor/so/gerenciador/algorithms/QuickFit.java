@@ -48,7 +48,6 @@ public class QuickFit {
 				// ... verifica se há espaço na memória para a criação de um bloco com o tamanho correspondente ao processo.
 				if (memory.canCreateBlock(process.getBytes())) {
 					memory.insertFreeBlock(process.getBytes());
-					insertMemoryBlockInList();
 					isAllocated = insertProcess(process);
 				// Senão, o processo é abortado.
 				}else{
@@ -59,7 +58,6 @@ public class QuickFit {
 	}
 	
 	public boolean insertProcess(Process process){
-		
 		switch (process.getBytes()) {
 			case 32:
 				if (!mainList.get(0).isEmpty()) {
@@ -102,7 +100,7 @@ public class QuickFit {
 					chosen.setProcess(process);
 					chosen.setUsedSpace(process.getBytes());
 					memory.transferFreeToBusy(chosen.getId());
-					System.out.println("ALOCOU PROCESSO " + process.getId());
+					System.out.println("ALOCOU PROCESSO 256" + process.getId());
 					return true;
 				}
 			case 512:
@@ -113,7 +111,7 @@ public class QuickFit {
 					chosen.setProcess(process);
 					chosen.setUsedSpace(process.getBytes());
 					memory.transferFreeToBusy(chosen.getId());
-					System.out.println("ALOCOU PROCESSO " + process.getId());
+					System.out.println("ALOCOU PROCESSO 512" + process.getId());
 					return true;
 				}
 			case 1024:
@@ -124,7 +122,7 @@ public class QuickFit {
 					chosen.setProcess(process);
 					chosen.setUsedSpace(process.getBytes());
 					memory.transferFreeToBusy(chosen.getId());
-					System.out.println("ALOCOU PROCESSO " + process.getId());
+					System.out.println("ALOCOU PROCESSO 1024" + process.getId());
 					return true;
 				}
 			default:
@@ -134,15 +132,6 @@ public class QuickFit {
 		return false;
 	
 	}
-	
-	
-	public boolean doesProcessFitMemoryBlock(Process process, MemoryBlock block){
-		if (process.getBytes() <= block.getTotalSize()) {
-			return true;
-		}
-		return false;
-	}
-	
 	
 	public void abort(Process process){
 		process.setStatus(Status.ABORTED);
@@ -173,60 +162,57 @@ public class QuickFit {
 		while (header.getNextBlock() != null) {
 
 			switch (header.getNextBlock().getTotalSize()) {
-			case 32:
-				header.getNextBlock().setList(32);
-				mainList.get(0).add(header.getNextBlock());
-				break;
-			case 64:
-				header.getNextBlock().setList(64);
-				mainList.get(1).add(header.getNextBlock());
-				break;
-			case 128:
-				header.getNextBlock().setList(128);
-				mainList.get(2).add(header.getNextBlock());
-				break;
-			case 256:
-				header.getNextBlock().setList(256);
-				mainList.get(3).add(header.getNextBlock());
-				break;
-			case 512:
-				header.getNextBlock().setList(512);
-				mainList.get(4).add(header.getNextBlock());
-				break;
-			case 1024:
-				header.getNextBlock().setList(1024);
-				mainList.get(5).add(header.getNextBlock());
-				break;
-			default:
-				break;
+				case 32:
+					header.getNextBlock().setList(32);
+					mainList.get(0).add(header.getNextBlock());
+					organizeBlocksById(mainList.get(0));
+					break;
+				case 64:
+					header.getNextBlock().setList(64);
+					mainList.get(1).add(header.getNextBlock());
+					organizeBlocksById(mainList.get(1));
+					break;
+				case 128:
+					header.getNextBlock().setList(128);
+					mainList.get(2).add(header.getNextBlock());
+					organizeBlocksById(mainList.get(2));
+					break;
+				case 256:
+					header.getNextBlock().setList(256);
+					mainList.get(3).add(header.getNextBlock());
+					organizeBlocksById(mainList.get(3));
+					break;
+				case 512:
+					header.getNextBlock().setList(512);
+					mainList.get(4).add(header.getNextBlock());
+					organizeBlocksById(mainList.get(4));
+					break;
+				case 1024:
+					header.getNextBlock().setList(1024);
+					mainList.get(5).add(header.getNextBlock());
+					organizeBlocksById(mainList.get(5));
+					break;
+				default:
+					break;
 			}
+			break;
 				
 		}
 	}
 	
-	public void removeMemoryBlockFromList(MemoryBlock block){
-		switch (block.getList()) {
-		case 32:
-			mainList.get(0).remove(block);
-			break;
-		case 64:
-			mainList.get(1).remove(block);
-			break;
-		case 128:
-			mainList.get(2).remove(block);
-			break;
-		case 256:
-			mainList.get(3).remove(block);
-			break;
-		case 512:
-			mainList.get(4).remove(block);
-			break;
-		case 1024:
-			mainList.get(5).remove(block);
-			break;
-		default:
-			break;
+	public List<MemoryBlock> organizeBlocksById(List<MemoryBlock> blocks){
+		if (!blocks.isEmpty()) {
+			for (int i = 0; i < blocks.size(); i++) {
+				for (int j = i; j < blocks.size(); j++) {
+					if (i == blocks.get(j).getId()) {
+						MemoryBlock removedBlock = blocks.remove(j);
+						blocks.add(i, removedBlock);
+					}
+				}
+			}
 		}
+		
+		return blocks;
 	}
 	
 }

@@ -125,6 +125,10 @@ p{
 	box-shadow: 1px 1px 6px black;
 }
 
+.pointer {
+	background: #955ADB;
+}
+
 .button {
 	font-family: Calibri;
 	font-size: 14px;

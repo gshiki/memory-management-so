@@ -172,11 +172,6 @@
 					<button type="button" onclick="addProcess();">Adicionar Processo</button>
 				</div>
 				
-				<div class="container-tempo-sistema">
-					<div class="text">Tempo do Sistema:</div>
-					<div id="tempoSistemaContainer"></div>
-				</div>
-				
 				<hr>
 			</div>
 			
