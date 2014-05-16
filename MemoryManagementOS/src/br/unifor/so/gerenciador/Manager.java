@@ -106,7 +106,7 @@ public class Manager {
 			
 			free = free.getNextBlock();
 		}
-		
+		organizeBlocksById(blocks);
 		return blocks;
 	}
 	

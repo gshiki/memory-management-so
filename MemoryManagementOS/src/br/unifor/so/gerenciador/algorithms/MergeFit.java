@@ -1,5 +1,6 @@
 package br.unifor.so.gerenciador.algorithms;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.unifor.so.gerenciador.Memory;
@@ -60,7 +61,12 @@ public class MergeFit {
 			// ...verifica se o processo encaixa no bloco de memória.
 			if (doesProcessFitMemoryBlock(process, pointer.getNextBlock())) {
 				if (pointer.getNextBlock().getTotalSize() - process.getBytes() > 0) {
-					memory.insertFreeBlock(pointer.getNextBlock().getTotalSize() - process.getBytes());
+					if (pointer.getNextBlock().getNextBlock() != null) {
+						memory.insertFreeBlockAfter(pointer.getNextBlock().getTotalSize() - process.getBytes(), pointer.getNextBlock());
+						//TODO método que organiza os blocos
+					} else {
+						memory.insertFreeBlock(pointer.getNextBlock().getTotalSize() - process.getBytes());
+					}
 					process.setStatus(Status.IN_USE);
 					pointer.getNextBlock().setProcess(process);
 					pointer.getNextBlock().setTotalSize(process.getBytes());
@@ -92,6 +98,17 @@ public class MergeFit {
 		process.setStatus(Status.ABORTED);
 		abortedList.add(process);
 		System.out.println("ABORTOU O " + process.getId());
+	}
+	
+	public void organizeBlocksId(){
+		MemoryBlock pointer = memory.getHeaderFree();
+		int position = 0;
+		
+		while(pointer.getNextBlock() != null){
+			pointer.getNextBlock().setId(position);
+			position++;
+			pointer = pointer.getNextBlock();
+		}
 	}
 	
 }
