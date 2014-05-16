@@ -84,6 +84,14 @@ public class ManagerServlet extends HttpServlet {
 				response.getWriter().append(buildContainerAbortedProcesses(abortedList));
 				response.getWriter().flush();
 			}
+		} else if (act != null && act.equals("restart")) {
+			Process.PROCESS_ID = 0;
+			MemoryBlock.BLOCK_ID = 0;
+			
+			request.removeAttribute("ready");
+			request.removeAttribute("processList");
+			
+			rd.forward(request, response);
 		}
 	}
 	

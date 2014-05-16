@@ -1,5 +1,8 @@
 package br.unifor.so.gerenciador;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Memory {
 	private int totalSize;
@@ -63,34 +66,6 @@ public class Memory {
 		return null;
 	}
 	
-	// Procura e retorna um bloco de memória livre dado seu ID
-	public MemoryBlock searchFromFreeMemoryBlock(int id, MemoryBlock block){
-		MemoryBlock pointer = searchFreeMemoryBlock(id);
-		
-		while(pointer.getNextBlock() != null){
-			if (pointer.getNextBlock().getId() == id) {
-				return pointer.getNextBlock();
-			}
-			pointer = pointer.getNextBlock();
-		}
-		
-		return null;
-	}
-	
-	// Procura e retorna um bloco de memória ocupado dado seu ID
-	public MemoryBlock searchFromBusyMemoryBlock(int id, MemoryBlock block){
-		MemoryBlock pointer = searchBusyMemoryBlock(id);
-		
-		while(pointer.getNextBlock() != null){
-			if (pointer.getNextBlock().getId() == id) {
-				return pointer.getNextBlock();
-			}
-			pointer = pointer.getNextBlock();
-		}
-		
-		return null;
-	}
-	
 	// Retorna o espaço usado por blocos na lista de Free
 	public int getUsedFreeSpace(){
 		int usedSpace = 0;
@@ -125,6 +100,25 @@ public class Memory {
 	// Retorna o espaço que esta sobrando em toda a memória
 	public int getTotalRemainingSpace(){
 		return totalSize - (getUsedBusySpace()+getUsedFreeSpace());
+	}
+	
+	public List<MemoryBlock> getBlocks() {
+		MemoryBlock busy = getHeaderBusy();
+		MemoryBlock free = getHeaderFree();
+		
+		List<MemoryBlock> blocks = new ArrayList<MemoryBlock>();
+		
+		while (busy.getNextBlock() != null) {
+			blocks.add(busy.getNextBlock());
+			
+			busy = busy.getNextBlock();
+		}
+		while (free.getNextBlock() != null) {
+			blocks.add(free.getNextBlock());
+			
+			free = free.getNextBlock();
+		}
+		return blocks;
 	}
 	
 	// Verifica se um bloco pode ser criado na memória
@@ -184,17 +178,15 @@ public class Memory {
 	}
 	
 	// Insere um bloco de memória na lista de livres
-	public void insertFreeBlockAfter(int totalSize, MemoryBlock aux){
+	public void insertFreeBlockAfter(int totalSize, MemoryBlock block){
 		System.out.println(">>>>>>>>>>>>>> CRIOU UM BLOCO NOVO DE TAMANHO : " + totalSize);
 		MemoryBlock newBlock = new MemoryBlock(totalSize);
-		MemoryBlock pointer = aux;
 		newBlock.setStatus(Status.FREE);
 		
-		newBlock.setNextBlock(pointer.getNextBlock());
-		pointer.getNextBlock().setPreviousBlock(newBlock);
-		pointer.setNextBlock(newBlock);
-		newBlock.setPreviousBlock(pointer);
-		
+		newBlock.setNextBlock(block.getNextBlock());
+		block.getNextBlock().setPreviousBlock(newBlock);
+		block.setNextBlock(newBlock);
+		newBlock.setPreviousBlock(block);
 	}
 	 
 	// Remove um bloco de memória da lista de Free

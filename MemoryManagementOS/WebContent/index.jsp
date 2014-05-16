@@ -9,11 +9,18 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		
 		<script type="text/javascript">
-		var TIME_EXECUTE_INTERVAL = 1 * 1000;
+		var TIME_EXECUTE_INTERVAL = 2 * 1000;
 		
 		<c:if test="${ready}">
 			TIMEOUT_EXECUTE = window.setTimeout( 'execute()' , TIME_EXECUTE_INTERVAL );
 		</c:if>
+		
+		function restart() {
+			if (TIMEOUT_EXECUTE) {
+				clearInterval(TIMEOUT_EXECUTE);
+			}
+			window.location = "ManagerServlet?action=restart";
+		}
 		
 		function pause(botao) {
 			if (TIMEOUT_EXECUTE) {
@@ -173,6 +180,8 @@
 						<button disabled="disabled" type="submit" name="action" value="start">Iniciar</button>
 						
 						<button onclick="pause(this); return false;">Pausar</button>
+						
+						<button onclick="restart(); return false;">Reiniciar</button>
 					</c:if>
 					
 					<button type="button" onclick="addProcess();">Adicionar Processo</button>
@@ -193,7 +202,7 @@
 			<div class="container" id="processContainer">
 				<c:forEach items="${processList}" var="process">
 					<div class="ready">
-						<div class="process-info">
+						<div onclick="excluirProcesso('${process.getId()}');" class="process-info">
 							#P<c:out value="${process.getId()}"/> <br/>
 							Tempo: <c:out value="${process.getTime()}"/> s <br/>
 							Tamanho: <c:out value="${process.getBytes()}"/> bytes <br/>

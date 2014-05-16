@@ -1,7 +1,7 @@
 package br.unifor.so.gerenciador;
 
 public class MemoryBlock {
-	private static int BLOCK_ID = 0;
+	public static int BLOCK_ID = 0;
 	
 	private int id;
 	private int list;
