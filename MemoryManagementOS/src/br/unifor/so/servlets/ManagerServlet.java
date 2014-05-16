@@ -1,6 +1,7 @@
 package br.unifor.so.servlets;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +23,8 @@ import br.unifor.so.gerenciador.Status;
 @WebServlet("/ManagerServlet")
 public class ManagerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
 
 	private Date systemCycle;
 	private Manager manager;
@@ -66,7 +69,7 @@ public class ManagerServlet extends HttpServlet {
 			if (manager != null) {
 				manager.execute();
 				
-				List<MemoryBlock> blocks = manager.getBlocks();
+				List<MemoryBlock> blocks = manager.organizeBlocksById(manager.getBlocks());
 				List<Process> processList = manager.getProcessList();
 				List<Process> completedList = garbage.getCompletedList();
 				List<Process> abortedList = manager.getAbortedList();
@@ -94,8 +97,10 @@ public class ManagerServlet extends HttpServlet {
 		
 		systemCycle = calendar.getTime();
 		
-		html += "tempoSistemaContainer=";
-		html += "<div>" + systemCycle.getTime() + "</div>";
+		html += "systemTimeContainer=";
+		html += "<div>" + formatter.format(systemCycle.getTime()) + "</div>";
+		
+		html += "<separator>";
 		
 		return html;
 	}
