@@ -62,7 +62,7 @@ public class BestFit {
 		while(pointer.getNextBlock() != null){
 			// ...verifica se o processo encaixa no bloco de memória.
 			if (doesProcessFitMemoryBlock(process, pointer.getNextBlock())) {
-				if (pointer.getNextBlock().getTotalSize() - process.getBytes() <= diff) {
+				if (pointer.getNextBlock().getTotalSize() - process.getBytes() < diff) {
 					diff = pointer.getNextBlock().getTotalSize() - process.getBytes();
 					id = pointer.getNextBlock().getId();
 				}

@@ -41,13 +41,13 @@ public class WorstFit {
 			// ...pego o primeiro processo da lista.
 			Process process = processList.remove(0);
 			// Enquanto o próximo bloco não for nulo...
-			isAllocated = verifyAllocation(pointer, process);
+			isAllocated = insertProcess(pointer, process);
 			// Se o processo não for alocado...
 			if (!isAllocated) {
 				// ... verifica se há espaço na memória para a criação de um bloco com o tamanho correspondente ao processo.
 				if (memory.canCreateBlock(process.getBytes())) {
 					memory.insertFreeBlock(process.getBytes());
-					isAllocated = verifyAllocation(pointer, process);
+					isAllocated = insertProcess(pointer, process);
 				// Senão, o processo é abortado.
 				}else{
 					abort(process);
@@ -56,13 +56,13 @@ public class WorstFit {
 		}
 	}
 	
-	public boolean verifyAllocation(MemoryBlock pointer, Process process){
+	public boolean insertProcess(MemoryBlock pointer, Process process){
 		int id = -1;
-		int diff = 0;
+		int diff = -1;
 		while(pointer.getNextBlock() != null){
 			// ...verifica se o processo encaixa no bloco de memória.
 			if (doesProcessFitMemoryBlock(process, pointer.getNextBlock())) {
-				if (pointer.getNextBlock().getTotalSize() - process.getBytes() >= diff) {
+				if (pointer.getNextBlock().getTotalSize() - process.getBytes() > diff) {
 					diff = pointer.getNextBlock().getTotalSize() - process.getBytes();
 					id = pointer.getNextBlock().getId();
 				}
@@ -77,7 +77,7 @@ public class WorstFit {
 			memory.searchFreeMemoryBlock(id).setUsedSpace(process.getBytes());
 			
 			memory.transferFreeToBusy(id);
-			System.out.println(" <<<<<<<<<<<<<<<<<<<<< ALOCOU PROCESSO " + process.getId());
+			System.out.println(" <<<<<<<<<<<<<<<<<< ALOCOU PROCESSO " + process.getId());
 			return true;
 		}
 		return false;

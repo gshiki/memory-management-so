@@ -58,6 +58,7 @@ public class QuickFit {
 	}
 	
 	public boolean insertProcess(Process process){
+		insertMemoryBlockInList();
 		switch (process.getBytes()) {
 			case 32:
 				if (!mainList.get(0).isEmpty()) {
@@ -100,7 +101,7 @@ public class QuickFit {
 					chosen.setProcess(process);
 					chosen.setUsedSpace(process.getBytes());
 					memory.transferFreeToBusy(chosen.getId());
-					System.out.println("ALOCOU PROCESSO 256" + process.getId());
+					System.out.println("ALOCOU PROCESSO" + process.getId());
 					return true;
 				}
 			case 512:
@@ -111,7 +112,7 @@ public class QuickFit {
 					chosen.setProcess(process);
 					chosen.setUsedSpace(process.getBytes());
 					memory.transferFreeToBusy(chosen.getId());
-					System.out.println("ALOCOU PROCESSO 512" + process.getId());
+					System.out.println("ALOCOU PROCESSO " + process.getId());
 					return true;
 				}
 			case 1024:
@@ -122,7 +123,7 @@ public class QuickFit {
 					chosen.setProcess(process);
 					chosen.setUsedSpace(process.getBytes());
 					memory.transferFreeToBusy(chosen.getId());
-					System.out.println("ALOCOU PROCESSO 1024" + process.getId());
+					System.out.println("ALOCOU PROCESSO " + process.getId());
 					return true;
 				}
 			default:
