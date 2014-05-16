@@ -140,7 +140,7 @@
 								<option value="1"> First Fit
 								<option value="2"> Best Fit
 								<option value="3"> Worst Fit
-								<option value="4"> Nest Fit
+								<option value="4"> Next Fit
 								<option value="5"> Quick Fit
 								<option value="6"> Merge Fit
 							</select>

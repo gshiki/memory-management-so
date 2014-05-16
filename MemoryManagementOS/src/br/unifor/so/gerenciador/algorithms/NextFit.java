@@ -12,7 +12,8 @@ public class NextFit {
 	private List<Process> processList;
 	private List<Process> abortedList;
 	private Memory memory;
-	MemoryBlock pointer;
+	private int pointer;
+	private MemoryBlock point;
 	
 	/** CONSTRUCTOR **/
 	
@@ -20,7 +21,8 @@ public class NextFit {
 		this.processList = processList;
 		this.abortedList = abortedList;
 		this.memory = memory;
-		this.pointer = memory.getHeaderFree();	
+		this.point = memory.getHeaderFree();
+		this.pointer = memory.getHeaderFree().getId();	
 	}
 	
 	/** GETTERS & SETTERS **/
@@ -43,13 +45,13 @@ public class NextFit {
 			// ...pego o primeiro processo da lista.
 			Process process = processList.remove(0);
 			// Enquanto o próximo bloco não for nulo...
-			isAllocated = insertProcess(pointer, process);
+			isAllocated = insertProcess(process);
 			// Se o processo não for alocado...
 			if (!isAllocated) {
 				// ... verifica se há espaço na memória para a criação de um bloco com o tamanho correspondente ao processo.
 				if (memory.canCreateBlock(process.getBytes())) {
 					memory.insertFreeBlock(process.getBytes());
-					isAllocated = insertProcess(pointer, process);
+					isAllocated = insertProcess(process);
 				// Senão, o processo é abortado.
 				}else{
 					abort(process);
@@ -58,44 +60,58 @@ public class NextFit {
 		}
 	}
 	
-	public boolean insertProcess(MemoryBlock point, Process process){
+	public boolean insertProcess(Process process){
 		MemoryBlock aux = point;
-		while(aux.getNextBlock() != null){
-			// ...verifica se o processo encaixa no bloco de memória.
-			if (doesProcessFitMemoryBlock(process, aux.getNextBlock())) {
-				// Se encaixar, aloca o processo no bloco de memória.
-				process.setStatus(Status.IN_USE);
-				aux.getNextBlock().setProcess(process);
-				aux.getNextBlock().setUsedSpace(process.getBytes());
-				memory.transferFreeToBusy(aux.getNextBlock().getId());
-				System.out.println("ALOCOU PROCESSO " + process.getId());
-				pointer = aux;
-				return true;
-			// Senão, verifica no próximo bloco de memória.
-			}else{
-				aux = aux.getNextBlock();
-			}
+		
+		if (pointer == -1 && aux.getNextBlock() == null) {
+			return false;
 		}
 		
-		if (aux.getNextBlock() == null) {
-			aux = memory.getHeaderFree();
-			while (aux.getNextBlock() != null && aux.getNextBlock().getId() != point.getNextBlock().getId()) {
+		if (aux.getNextBlock() != null) {
+			while(aux.getNextBlock() != null){
 				// ...verifica se o processo encaixa no bloco de memória.
 				if (doesProcessFitMemoryBlock(process, aux.getNextBlock())) {
 					// Se encaixar, aloca o processo no bloco de memória.
+					pointer = aux.getNextBlock().getId();
+					point = aux.getNextBlock();
 					process.setStatus(Status.IN_USE);
 					aux.getNextBlock().setProcess(process);
 					aux.getNextBlock().setUsedSpace(process.getBytes());
 					memory.transferFreeToBusy(aux.getNextBlock().getId());
-					System.out.println(" <<<<<<<<<<<<<< ALOCOU PROCESSO " + process.getId());
-					pointer = aux;
+					System.out.println("ALOCOU PROCESSO " + process.getId());
 					return true;
-				// Senão, verifica no próximo bloco de memória.
-				} else {
+					// Senão, verifica no próximo bloco de memória.
+				}else{
 					aux = aux.getNextBlock();
 				}
 			}
 		}
+		if (aux.getStatus() == Status.BUSY) {
+			while (aux.getStatus() == Status.BUSY) {
+				if (memory.searchFreeMemoryBlock(pointer + 1) != null) {
+					if (doesProcessFitMemoryBlock(process, aux)) {
+						aux = memory.searchFreeMemoryBlock(pointer + 1);
+						break;
+					}
+				} else if (memory.searchBusyMemoryBlock(pointer + 1) != null){
+					if (doesProcessFitMemoryBlock(process, aux)) {
+						aux = memory.searchBusyMemoryBlock(pointer + 1);
+						break;
+					}
+				}
+				pointer++;
+			}
+			
+			pointer = aux.getId();
+			point = aux;
+			process.setStatus(Status.IN_USE);
+			aux.setProcess(process);
+			aux.setUsedSpace(process.getBytes());
+			memory.transferFreeToBusy(aux.getId());
+			System.out.println("ALOCOU PROCESSO " + process.getId());
+			return true;
+		}
+		
 		return false;
 	}
 	

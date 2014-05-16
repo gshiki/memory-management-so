@@ -74,7 +74,7 @@ public class ManagerServlet extends HttpServlet {
 				response.setContentType("text/plain");
 				response.setCharacterEncoding("UTF-8");
 				
-				response.getWriter().append(rollCycle());
+				//response.getWriter().append(rollCycle());
 				response.getWriter().append(buildContainerMemoryBlocks(blocks, manager.getAlgorithm()));
 				response.getWriter().append(buildContainerProcess(processList));
 				response.getWriter().append(buildContainerCompletedProcesses(completedList));
